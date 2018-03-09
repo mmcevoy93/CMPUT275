@@ -1,0 +1,51 @@
+Write code that reads from the standard input a string of length at least one and prints the first and last characters of the string to the standard output.
+
+The code should not print anything else to the standard output (i.e., when using input() to get the string from the standard input, do not add a prompt).
+
+You will need to submit your code separately on the code submission page.
+
+Example 1:
+
+Input
+
+abc
+
+Output
+
+ac
+
+Example 2:
+
+Input
+
+Hello
+
+Output
+
+Ho
+
+
+Write code that reads from the standard input a string and prints the number of upper-case characters in the string to the standard output.  Hint: there's a method on strings that will tell you if a character is upper or lower case.
+The code should not print anything else to the standard output (i.e., when using input() to get the string from the standard input, do not add a prompt).
+
+You will need to submit your code separately on the code submission page.
+
+Example 1:
+
+Input
+
+abc
+
+Output
+
+0
+
+Example 2:
+
+Input
+
+HelLo
+
+Output
+
+2
