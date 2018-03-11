@@ -1,0 +1,30 @@
+Sample runs and output. Note the spacing really doesn’t matter, as long as there is at least one space between each entry on a line. The order ties are broken in the frequency count also does not matter.
+
+#1
+python3 freq.py —ignore-case sample-input.txt
+is    3   0.25
+line    3   0.25
+this    3   0.25
+an-noying.    1   0.08
+annoying.    1   0.08
+normal.    1   0.08
+
+#2
+python3 freq.py --remove-punct --ignore-case --sort=byword sample-input.txt
+annoying    2   0.17
+     is    3   0.25
+   line    3   0.25
+ normal    1   0.08
+   this    3   0.25
+
+#3
+python3 freq.py sample-input.txt
+This 2 0.17
+line 2 0.17
+is 2 0.17
+normal. 1 0.08
+THIS 1 0.08
+LINE 1 0.08
+IS 1 0.08
+ANNOYING. 1 0.08
+an-noying. 1 0.08
