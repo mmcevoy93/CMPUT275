@@ -1,6 +1,4 @@
 import bstviz
-
-
 class AVLNode:
     """
     Same as BSTNode from before, except we now maintain a height.
@@ -14,7 +12,7 @@ class AVLNode:
         """
         Only for initializing an empty node, which will have height -1.
         """
-
+        self.num = None
         self.key = None
         self.item = None
         self.left = None
@@ -123,12 +121,14 @@ class AVLDict:
                 raise KeyError(key)
             elif key < node.key:
                 node.left = recursive_fix(node.left)
+
             elif key > node.key:
                 node.right = recursive_fix(node.right)
 
             return node._check_and_fix_imbalance()
 
         self.root = recursive_fix(self.root)
+
 
     def _find(self, key):
         """
@@ -223,12 +223,9 @@ class AVLDict:
         Updates the dictionary to store the item at the given key.
         If the key was not already present, it is added.
         """
-
         node, parent = self._find(key)
-
         if node.key is not None:
             node.item = item
-            self.num(key)
             return
 
         self.len += 1
@@ -241,6 +238,23 @@ class AVLDict:
         # now fix the AVL property on the nodes between this new node and root
         self._find_and_fix(key)
 
+    def willthiswork(self):
+        node, parent = self.root, None
+        print(node.key)
+        def num_build(node):
+            if node.key is None:
+                return 0
+            if node.left.key is None and node.right.key is None:
+                node.num = 1
+                return 1
+            else:
+                node.num = num_build(node.left) + num_build(node.right)
+            return node.num
+        if parent is not None:
+            node.num = num_build(parent) + 1
+        else:
+            node.num = 1
+
     def ith_key(self, index: int):
         """
         Returns the key that would be at the given index in the sorted list of
@@ -248,21 +262,29 @@ class AVLDict:
         range (i.e. < 0 or >= len(self)).
 
         Running time: O(log n) where the tree has n items.
+        keys = self.items()
+        return keys[index][0]
         """
         # TODO
-        pass
+        self.willthiswork()
+        node, _ = self.root, None
+        # if index > self.len:
+        #    raise IndexError()
 
-    def num(self, key):
-        """
-        TODO Fix this to work
-        """
-        # TODO
-        index = len(self.items())
-        node, parent = self._find(key)
+        def blah(node):
+            if node.key is None:
+                return
+            blah(node.left)
+            print(node.key, node.num)
+            blah(node.right)
+        blah(node)
 
-        if node.key is not None:
-            node.num = index
-            return
+        while node.num is not None and node.num != index:
+            if index < int(node.num/2):
+                node, _ = node.left, node
+            else:
+                node, _ = node.right, node
+        return node.key
 
     def __len__(self):
         return self.len
@@ -290,12 +312,13 @@ if __name__ == "__main__":
     # Insert nodes from 0 to 14.
     # Notice how the resulting tree is balanced! If this were a standard
     # binary search tree, it look like a long path.
+
+    d = AVLDict()
+    d['arr'] = 'hello'
+    d['ccc'] = 'ccc'
+    d['depart'] = '1'
+
     for i in range(15):
         tree[i] = i
 
-    bstviz.bstviz(tree, padding=0.7).render(view=True)
-
-    while tree:
-        key = int(input("Enter a key to delete: "))
-        del tree[key]
-        bstviz.bstviz(tree, padding=0.7).render(view=True)
+    bstviz.bstviz(d, padding=0.7).render(view=True)
