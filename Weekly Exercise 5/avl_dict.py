@@ -1,8 +1,6 @@
-import bstviz
 class AVLNode:
     """
     Same as BSTNode from before, except we now maintain a height.
-
     In our implementation of AVL trees, we use "empty" nodes
     (nodes without keys)
     instead of None child pointers. It simplifies a few steps.
@@ -32,7 +30,6 @@ class AVLNode:
         Performs a left rotation.
         Assumes the right child of this node is not empty.
         Recalculates heights of the two nodes that are rotated.
-
         Returns the node that was rotated above this one.
         """
 
@@ -49,7 +46,6 @@ class AVLNode:
         Performs a right rotation.
         Assumes the left child of this node is not empty.
         Recalculates heights of the two nodes that are rotated.
-
         Returns the node that was rotated above this one.
         """
 
@@ -66,7 +62,6 @@ class AVLNode:
         Checks the height (after recalculating).
         If imbalanced, will perform rotations to rebalance this node.
         Returns the root of the new subtree (may no longer be this node).
-
         Assumes the heights of the children are correct and that they differ
         by at most 2 (which will be the case if used properly with the AVL
         rebalancing procedures).
@@ -97,7 +92,6 @@ class AVLDict:
     a total ordering. The underlying data structure is an AVL tree whose nodes
     are ordered by the keys they hold. This guarantees insertion, finding, and
     removal take O(log n) time.
-
     Note, in this implementation we represent a empty child as a node that has
     None for a key. This differs with the TreeDict implementation, which just
     used None pointers.
@@ -133,9 +127,7 @@ class AVLDict:
     def _find(self, key):
         """
         Find the node with the given key.
-
         Returns node, parent where parent is the parent node on the search.
-
         If the key is not found, it returns the empty node that would have
         received the key.
         """
@@ -223,7 +215,7 @@ class AVLDict:
         Updates the dictionary to store the item at the given key.
         If the key was not already present, it is added.
         """
-        node, parent = self._find(key)
+        node, _ = self._find(key)
         if node.key is not None:
             node.item = item
             return
@@ -237,36 +229,42 @@ class AVLDict:
 
         # now fix the AVL property on the nodes between this new node and root
         self._find_and_fix(key)
+        
 
     def willthiswork(self):
-        node, parent = self.root, None
-        print(node.key)
+       
         def num_build(node):
+            print(node.key, 'cccc')
             if node.key is None:
                 return 0
             if node.left.key is None and node.right.key is None:
                 node.num = 1
                 return 1
-            else:
-                node.num = num_build(node.left) + num_build(node.right)
-            return node.num
-        if parent is not None:
-            node.num = num_build(parent) + 1
-        else:
-            node.num = 1
+            if node.left.key is not None and node.right.key is not None:
+                node.num = num_build(node.left)
+                node.num = num_build(node.right)
+                return node.num
+            if node.left.key is None and node.right.key is not None:
+                node.num = num_build(node.right)
+                return node.num
+            if node.left.key is not None and node.right.key is None:
+                node.num = num_build(node.left)
+                return node.num
+        print('@@@@@')
+        num_build(self.root)
 
     def ith_key(self, index: int):
         """
         Returns the key that would be at the given index in the sorted list of
         all keys of the tree. Raises an IndexError if the index is out of
         range (i.e. < 0 or >= len(self)).
-
         Running time: O(log n) where the tree has n items.
         keys = self.items()
         return keys[index][0]
         """
         # TODO
-        self.willthiswork()
+        
+        
         node, _ = self.root, None
         # if index > self.len:
         #    raise IndexError()
@@ -291,7 +289,8 @@ class AVLDict:
 
     def __setitem__(self, key, item):
         self.update(key, item)
-
+        self.willthiswork()
+        
     def __getitem__(self, key):
         node, _ = self._find(key)
         if node.key is None:
@@ -304,21 +303,3 @@ class AVLDict:
 
     def __str__(self):
         return str(self.items())
-
-
-if __name__ == "__main__":
-    tree = AVLDict()
-
-    # Insert nodes from 0 to 14.
-    # Notice how the resulting tree is balanced! If this were a standard
-    # binary search tree, it look like a long path.
-
-    d = AVLDict()
-    d['arr'] = 'hello'
-    d['ccc'] = 'ccc'
-    d['depart'] = '1'
-
-    for i in range(15):
-        tree[i] = i
-
-    bstviz.bstviz(d, padding=0.7).render(view=True)
