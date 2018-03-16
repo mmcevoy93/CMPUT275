@@ -10,7 +10,7 @@ class AVLNode:
         """
         Only for initializing an empty node, which will have height -1.
         """
-        self.num = None
+        self.num = 1
         self.key = None
         self.item = None
         self.left = None
@@ -229,29 +229,53 @@ class AVLDict:
 
         # now fix the AVL property on the nodes between this new node and root
         self._find_and_fix(key)
-        
+
 
     def willthiswork(self):
-       
+        """
+        adding the num values to the tree dictionary
+
         def num_build(node):
-            print(node.key, 'cccc')
+            if node.key is None:
+                    return 0
+                else:
+                    node.num = 1
+                if node.left.key is not None and node.right.key is not None:
+                    node.num += num_build(node.left) + num_build(node.right)
+                    return node.num
+                if node.left.key is None and node.right.key is not None:
+                    node.num += num_build(node.right)
+                    return node.num
+                if node.left.key is not None and node.right.key is None:
+                    node.num += num_build(node.left)
+                    return node.num
+                if node.left.key is None and node.right.key is None:
+                    node.num = 1
+                    return 1
+        num_build(self.root)
+        """
+        node = self.root
+        def num_build(node):
+
             if node.key is None:
                 return 0
+            else:
+                node.num = 1
+            if node.left.key is not None and node.right.key is not None:
+                node.num += num_build(node.left) + num_build(node.right)
+                return node.num
+            if node.left.key is None and node.right.key is not None:
+                node.num += num_build(node.right)
+                return node.num
+            if node.left.key is not None and node.right.key is None:
+                node.num += num_build(node.left)
+                return node.num
             if node.left.key is None and node.right.key is None:
                 node.num = 1
                 return 1
-            if node.left.key is not None and node.right.key is not None:
-                node.num = num_build(node.left)
-                node.num = num_build(node.right)
-                return node.num
-            if node.left.key is None and node.right.key is not None:
-                node.num = num_build(node.right)
-                return node.num
-            if node.left.key is not None and node.right.key is None:
-                node.num = num_build(node.left)
-                return node.num
-        print('@@@@@')
-        num_build(self.root)
+        num_build(node)
+        num_build(node.right)
+
 
     def ith_key(self, index: int):
         """
@@ -259,23 +283,6 @@ class AVLDict:
         all keys of the tree. Raises an IndexError if the index is out of
         range (i.e. < 0 or >= len(self)).
         Running time: O(log n) where the tree has n items.
-        keys = self.items()
-        return keys[index][0]
-        """
-        # TODO
-        
-        
-        node, _ = self.root, None
-        # if index > self.len:
-        #    raise IndexError()
-
-        def blah(node):
-            if node.key is None:
-                return
-            blah(node.left)
-            print(node.key, node.num)
-            blah(node.right)
-        blah(node)
 
         while node.num is not None and node.num != index:
             if index < int(node.num/2):
@@ -284,13 +291,72 @@ class AVLDict:
                 node, _ = node.right, node
         return node.key
 
+        keys = self.items()
+        return keys[index][0]
+        O(n) version that works ^^^^^
+
+
+        This doesn't work as desired. Stores the num values correctly but
+        does not find the values on the right side of the tree correctly.
+        i.e. anything less than half the length of the dictionary, no problem
+        anything more it only grabs the far right bottom node
+
+        I have only tested it with a dictionary size of 8 so if any bigger
+        it could not work either. who knows :/
+
+        lots of comments were kept in here and non meaningful variable and
+        function names were kept for myself and future editing purposes
+
+        """
+        # TODO
+
+        node, parent = self.root, None
+        # print(node.key, 'key')
+        # print(node.right.key,"right")
+        # print(node.right.left.right.key, "right left right")
+
+        if index > self.len-1:
+          raise KeyError(IndexError)
+
+        def blah(node):
+            """
+            Just displays the tree in the lexigraphical order and the
+            corisponding num values. helped me test things out
+            """
+            if node.key is None:
+                return
+            blah(node.left)
+            # print(node.key, node.num)
+            blah(node.right)
+        blah(self.root)
+        index += 1
+        while node.key is not None:
+            """
+            this is how I planned to tranveresed the tree to get to the ith key
+            but it does not work
+            """
+            # print(int(node.num), "num", index, "index")
+            if node.left.key is None and node.right.key is None:
+                return node.key
+            elif index < int(node.num/2):
+                node, parent = node.left, node
+                index = int(index/2)
+            elif index > int(node.num/2):
+                node, parent = node.right, node
+                index = int(index/2)
+            elif index == int(node.num/2):
+                # print(node.key)
+                return node.key
+
+        return node.key
+
     def __len__(self):
         return self.len
 
     def __setitem__(self, key, item):
         self.update(key, item)
         self.willthiswork()
-        
+
     def __getitem__(self, key):
         node, _ = self._find(key)
         if node.key is None:
@@ -300,6 +366,7 @@ class AVLDict:
 
     def __delitem__(self, key):
         self.popitem(key)
+        self.willthiswork()
 
     def __str__(self):
         return str(self.items())
