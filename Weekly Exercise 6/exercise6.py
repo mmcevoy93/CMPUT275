@@ -27,6 +27,8 @@ def findValley(heights):
     1
     """
 
+    return min(heights)
+
     pass
 
 
@@ -96,3 +98,16 @@ def climbing(heights, rest, limit):
     """
 
     pass
+
+
+import time
+
+big_list = []
+
+for i in range(1000000, 1, -1):
+    big_list.append(i)
+
+start = time.time()
+print(findValley(big_list))
+end = time.time()
+print("Done!\nElapsed time in seconds:", end-start)
