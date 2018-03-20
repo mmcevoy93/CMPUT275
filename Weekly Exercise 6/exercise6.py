@@ -40,8 +40,10 @@ def findValley(heights, index=0):
             index += int(index/2)
         else:
             return index
-        print(index)
-        time.sleep(1)
+        if index > len(heights):
+            print('error')
+            return
+
 
 
 
@@ -127,5 +129,5 @@ if __name__ == "__main__":
     print("Done!\nElapsed time in seconds:", end-start)
     '''
     import doctest
-    #doctest.testmod()
-    print(findValley([12,11, 10, 2, 3, 12]))
+    doctest.testmod()
+    print(findValley([11, 2, 3, 12]))
