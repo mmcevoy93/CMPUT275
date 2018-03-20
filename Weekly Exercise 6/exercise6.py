@@ -1,4 +1,5 @@
-def findValley(heights):
+import time
+def findValley(heights, index=0):
     """
     Assumption: 'heights' is a nonempty list of integers with the guarantee
     that there is some index 0 <= i < len(l) such that the sublist
@@ -11,25 +12,36 @@ def findValley(heights):
     lists that satisfy the above property.
 
     Examples:
-    findValley([10, 7, 4, 1, 3, 6])
+    >>> findValley([10, 7, 4, 1, 3, 6])
     3
 
-    findValley([4])
+    >>> findValley([4])
     0
 
-    findValley([3, 2, 1])
+    >>> findValley([3, 2, 1])
     2
 
-    findValley([9, 14])
+    >>> findValley([9, 14])
     0
 
-    findValley([11, 2, 11, 12])
+    >>> findValley([11, 10, 2, 12, 13, 14, 15, 16, 17, 18])
     1
     """
-
-    return min(heights)
-
-    pass
+    index = int(len(heights)/2)
+    while True:
+        if index == 1:
+            if heights[0] > heights[1]:
+                return index
+            else:
+                return 0
+        if heights[index-1] < heights[index]:
+            index = int(index/2)
+        elif heights[index-1] > heights[index]:
+            index += int(index/2)
+        else:
+            return index
+        print(index)
+        time.sleep(1)
 
 
 
@@ -100,14 +112,20 @@ def climbing(heights, rest, limit):
     pass
 
 
-import time
+if __name__ == "__main__":
+    '''
 
-big_list = []
 
-for i in range(1000000, 1, -1):
-    big_list.append(i)
-
-start = time.time()
-print(findValley(big_list))
-end = time.time()
-print("Done!\nElapsed time in seconds:", end-start)
+    big_list = []
+    for i in range(10000, 99999, -1):
+        big_list.append(i)
+    big_list.append(300000)
+    # print(big_list)
+    start = time.time()
+    #print(findValley(big_list))
+    end = time.time()
+    print("Done!\nElapsed time in seconds:", end-start)
+    '''
+    import doctest
+    #doctest.testmod()
+    print(findValley([12,11, 10, 2, 3, 12]))
